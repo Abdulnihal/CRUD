@@ -3,17 +3,23 @@ const express = require('express');
 const router = express.Router();
 const Post= require('../models/Post');
 
-//gET alL ThE posT
+
+
+
+
+
+
+//Get all the  blogs
 router.get('/',async(req,res)=>{
    try {
        const posts=await Post.find();
-       res.json(posts);
+       res.send(posts);
    } catch (error) {
-    res.json({message:error})
+    res.send({message:error})
    }
     });
 
-//SuBmIT A post
+//Add a new blog
 router.post('/',async(req,res)=>{
     console.log(req.body);
 
@@ -28,37 +34,42 @@ router.post('/',async(req,res)=>{
     res.json({message:error})
     }
 });
-//SPECFIC POST
+//search a specific blog by id
+
 router.get('/:postId',async(req,res)=>{
     try{
     const posts = await Post.findById(req.params.postId);
-    res.json(posts);
+    res.send(posts);
     }
     catch (error) {
-        res.json({message:error})
+        res.send('Error:No blog found with given id')
         }
     });
-//delete a post
+//delete a specific blog by id
+
 router.delete('/:postId',async(req,res)=>{
     try{
     const removedPost=await Post.remove({_id: req.params.postId});
-    res.json(removedPost);
+    res.send(removedPost);
     }
     catch (error) {
-    res.json({message:error})
+        res.send('Error:No blog found with given id')
      }
 });
-//UPDATE
+
+//UPDATE a blog with given id
 router.patch('/:postId',async(req,res)=>{
     try{
    const updatePost=await Post.updateOne(
        {_id: req.params.postId},
-       {$set:{  title: req.body.title}}
+       {$set:{  title: req.body.title},
+       description: req.body.description},
+      
        )
-       res.json(updatePost);
+       res.send(updatePost);
     }
     catch (error) {
-        res.json({message:error})
+        res.send('Error:No blog found with given id')
          }
 });
 

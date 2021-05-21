@@ -1,7 +1,7 @@
   
 const mongoose = require('mongoose')
 
-const BookSchema = new mongoose.Schema({
+const PostSchema = new mongoose.Schema({
 
     title: {
         type:String,
@@ -15,4 +15,4 @@ const BookSchema = new mongoose.Schema({
 })
 
 
-mongoose.model("book",BookSchema)
+module.exports=mongoose.model('Posts',PostSchema)

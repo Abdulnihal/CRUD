@@ -1,17 +1,21 @@
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
+app.use(bodyParser.json());
 const mongoose = require('mongoose')
-require('./models/Book')
+require('dotenv/config');
+require('./models/Post')
+const postRoute=require('./Routes/posts');
+app.use('/blogs',postRoute);
 
-app.use(bodyParser.json())
-
-const Book = mongoose.model("book")
 
 
-const mongoUri = "mongodb+srv://NIHAL:NIHAL@cluster0.epemp.mongodb.net/NIHAL?retryWrites=true&w=majority"
 
-mongoose.connect(mongoUri,{
+
+//connecting to mongo db address
+//const mongoUri = "mongodb+srv://NIHAL:NIHAL@cluster0.epemp.mongodb.net/NIHAL?retryWrites=true&w=majority"
+
+mongoose.connect(process.env.DB_CONNECTION,{
     useNewUrlParser:true,
     useUnifiedTopology:true
 })
@@ -24,58 +28,6 @@ mongoose.connection.on("error",(err)=>{
 })
 
 
-app.get('/',(req,res)=>{
-    Book.find({}).then(data=>{
-        res.send(data)
-    }).catch(err=>{
-        console.log(err)
-    })
-    
-    
-})
-
-
-
-app.post('/send',(req,res)=>{
-     const book = new Book({
-        title:req.body.title,
-         description:req.body.description,
-
-     })
-     book.save()
-     .then(data=>{
-         console.log(data)
-         res.send(data)
-     }).catch(err=>{
-         console.log(err)
-     })
-     
-})
-
-app.post('/delete',(req,res)=>{
-    Book.findByIdAndRemove(req.body.id)
-    .then(data=>{
-        console.log(data)
-        res.send(data)
-    })
-    .catch(err=>{
-        console.log(err)
-    })
-})
-
-app.post('/update',(req,res)=>{
-    Book.findByIdAndUpdate(req.body.id,{
-        title:req.body.title,
-        description:req.body.description,
-     
-    }).then(data=>{
-        console.log(data)
-        res.send(data)
-    })
-    .catch(err=>{
-        console.log(err)
-    })
-})
 
 
 
